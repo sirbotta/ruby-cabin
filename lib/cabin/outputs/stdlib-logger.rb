@@ -28,7 +28,7 @@ class Cabin::Outputs::StdlibLogger
     # delete things from the 'data' portion that's not really data.
     data.delete(:message)
     data.delete(:timestamp)
-    message = "#{event[:message]} #{data.inspect}"
+    message = "#{event[:message]} #{data.to_json}"
 
     #p [@logger.level, logger.class::DEBUG]
     # This will call @logger.info(data) or something similar.

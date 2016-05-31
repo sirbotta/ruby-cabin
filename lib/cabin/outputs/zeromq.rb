@@ -1,5 +1,6 @@
 require 'cabin'
 require 'ffi-rzmq'
+require 'json'
 
 # Output to a zeromq socket.
 class Cabin::Outputs::ZeroMQ
@@ -69,7 +70,7 @@ class Cabin::Outputs::ZeroMQ
       topic = @topic.is_a?(Proc) ? @topic.call(event) : @topic
       error_check @socket.send_string(topic, ZMQ::SNDMORE), "in topic send_string"
     end
-    error_check @socket.send_string(event.inspect), "in send_string"
+    error_check @socket.send_string(event.to_json), "in send_string"
   end
 
   def teardown

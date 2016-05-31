@@ -1,5 +1,6 @@
 require "cabin"
 require "thread"
+require 'json'
 
 # Wrap IO objects with a reasonable log output. 
 #
@@ -49,7 +50,7 @@ class Cabin::Outputs::IO
   def <<(event)
     @lock.synchronize do
       if !tty?
-        @io.puts(event.inspect)
+        @io.puts(event.to_json)
         @io.flush
       else
         tty_write(event)
@@ -80,7 +81,7 @@ class Cabin::Outputs::IO
     if data.empty?
       message = [event[:message]]
     else
-      message = ["#{event[:message]} #{data.inspect}"]
+      message = ["#{event[:message]} #{data.to_json}"]
     end
     message.unshift("\e[#{CODEMAP[color.to_sym]}m") if !color.nil?
     message.unshift("\e[#{CODEMAP[bold]}m") if !bold.nil?

@@ -1,5 +1,6 @@
 require "cabin"
 require "eventmachine"
+require 'json'
 
 # Wrap Ruby stdlib's logger and make it EventMachine friendly. This
 # allows you to output to a normal ruby logger with Cabin.
@@ -30,7 +31,7 @@ class Cabin::Outputs::EM::StdlibLogger
   def <<(data)
     line = Hash.new
     line[:method] = data[:level] || "info"
-    line[:message] = "#{data[:message]} #{data.inspect}"
+    line[:message] = "#{data[:message]} #{data.to_json}"
     if EM::reactor_running?
       # Push line onto queue for later sending
       @logger_queue.push(line)
